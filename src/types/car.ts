@@ -11,6 +11,7 @@ export interface Car {
   bodyType: "Sedan" | "SUV" | "Coupe" | "Convertible" | "Hatchback" | "Wagon";
   color: string;
   image: string;
+  images?: string[];
   features: string[];
   description: string;
 }

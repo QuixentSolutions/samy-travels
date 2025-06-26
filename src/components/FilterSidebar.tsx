@@ -1,8 +1,13 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { CarFilters } from "@/types/car";
@@ -17,7 +22,7 @@ const FilterSidebar = ({ onFilter }: FilterSidebarProps) => {
     bodyType: "all",
     fuelType: "all",
     priceRange: [0, 500000],
-    yearRange: [2020, 2024]
+    yearRange: [2020, 2024],
   });
 
   const handleFilterChange = (key: keyof CarFilters, value: any) => {
@@ -29,10 +34,10 @@ const FilterSidebar = ({ onFilter }: FilterSidebarProps) => {
   const resetFilters = () => {
     const defaultFilters: CarFilters = {
       make: "all",
-      bodyType: "all", 
+      bodyType: "all",
       fuelType: "all",
       priceRange: [0, 500000],
-      yearRange: [2020, 2024]
+      yearRange: [2020, 2024],
     };
     setFilters(defaultFilters);
     onFilter(defaultFilters);
@@ -48,12 +53,15 @@ const FilterSidebar = ({ onFilter }: FilterSidebarProps) => {
           </Button>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Make Filter */}
         <div className="space-y-2">
           <Label htmlFor="make">Make</Label>
-          <Select value={filters.make} onValueChange={(value) => handleFilterChange("make", value)}>
+          <Select
+            value={filters.make}
+            onValueChange={(value) => handleFilterChange("make", value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select make" />
             </SelectTrigger>
@@ -72,7 +80,10 @@ const FilterSidebar = ({ onFilter }: FilterSidebarProps) => {
         {/* Body Type Filter */}
         <div className="space-y-2">
           <Label htmlFor="bodyType">Body Type</Label>
-          <Select value={filters.bodyType} onValueChange={(value) => handleFilterChange("bodyType", value)}>
+          <Select
+            value={filters.bodyType}
+            onValueChange={(value) => handleFilterChange("bodyType", value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select body type" />
             </SelectTrigger>
@@ -90,7 +101,10 @@ const FilterSidebar = ({ onFilter }: FilterSidebarProps) => {
         {/* Fuel Type Filter */}
         <div className="space-y-2">
           <Label htmlFor="fuelType">Fuel Type</Label>
-          <Select value={filters.fuelType} onValueChange={(value) => handleFilterChange("fuelType", value)}>
+          <Select
+            value={filters.fuelType}
+            onValueChange={(value) => handleFilterChange("fuelType", value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select fuel type" />
             </SelectTrigger>

@@ -1,10 +1,19 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, Eye, Phone, Calendar, Fuel, Gauge } from "lucide-react";
+import {
+  Heart,
+  Eye,
+  Phone,
+  Calendar,
+  Fuel,
+  Gauge,
+  MessageCircle,
+} from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { Car } from "@/types/car";
+import CarGalleryModal from "./CarGalleryModal";
 
 interface CarCardProps {
   car: Car;
@@ -12,6 +21,33 @@ interface CarCardProps {
 
 const CarCard = ({ car }: CarCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const handleWhatsAppBooking = () => {
+    if (!fromDate || !toDate) {
+      alert("Please select both from and to dates.");
+      return;
+    }
+
+    const message = `Hello, I would like to book the ${car.make} ${car.model} from ${fromDate} to ${toDate}.`;
+    const encodedMessage = encodeURIComponent(message);
+    const phoneNumber = "919944997733";
+    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+    window.open(url, "_blank");
+  };
+
+  const generateSampleImages = (baseImage: string): string[] => {
+  const basePath = baseImage.substring(0, baseImage.lastIndexOf("/")); // /images/CAR-1
+  return [1, 2, 3, 4, 5].map(
+    (i) => `${basePath}/${String(i).padStart(3, "0")}.jpg`
+  );
+};
+
 
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
@@ -33,7 +69,11 @@ const CarCard = ({ car }: CarCardProps) => {
             className="h-8 w-8 bg-white/90 hover:bg-white"
             onClick={() => setIsLiked(!isLiked)}
           >
-            <Heart className={`h-4 w-4 ${isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+            <Heart
+              className={`h-4 w-4 ${
+                isLiked ? "fill-red-500 text-red-500" : "text-gray-600"
+              }`}
+            />
           </Button>
           <Button
             size="icon"
@@ -74,7 +114,12 @@ const CarCard = ({ car }: CarCardProps) => {
             <span>{car.transmission}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
-            <span className="w-4 h-4 rounded-full" style={{ backgroundColor: car.color.toLowerCase().replace(/\s+/g, '') }}></span>
+            <span
+              className="w-4 h-4 rounded-full"
+              style={{
+                backgroundColor: car.color.toLowerCase().replace(/\s+/g, ""),
+              }}
+            ></span>
             <span>{car.color}</span>
           </div>
         </div>
@@ -94,15 +139,61 @@ const CarCard = ({ car }: CarCardProps) => {
           </div>
         </div>
 
+        {/* Date Range Picker */}
+        <div className="mb-4 flex flex-col md:flex-row gap-2">
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+            min={today}
+            className="border px-2 py-1 rounded-md text-sm w-full md:w-1/2"
+          />
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+            min={fromDate || today}
+            className="border px-2 py-1 rounded-md text-sm w-full md:w-1/2"
+          />
+        </div>
+
         <div className="flex gap-2">
-          <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
-            View Details
+          <Button
+            className="flex-1 bg-blue-600 hover:bg-blue-700"
+            onClick={() => setIsGalleryOpen(true)}
+          >
+            Gallery
           </Button>
-          <Button variant="outline" size="icon">
-            <Phone className="h-4 w-4" />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleWhatsAppBooking}
+            title="Send booking on WhatsApp"
+          >
+            <FaWhatsapp className="h-4 w-4 text-green-600" />
           </Button>
         </div>
       </CardContent>
+
+      {/* <CarGalleryModal
+        isOpen={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+        car={{
+          make: car.make,
+          model: car.model,
+          images: car.images || [car.image],
+        }}
+      /> */}
+      <CarGalleryModal
+  isOpen={isGalleryOpen}
+  onClose={() => setIsGalleryOpen(false)}
+  car={{
+    make: car.make,
+    model: car.model,
+    images: car.images || generateSampleImages(car.image),
+  }}
+/>
+
     </Card>
   );
 };
