@@ -20,7 +20,7 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             <a
-              href="https://wa.me/919944997733"
+              href="https://wa.me/919944827270"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-green-600 flex items-center space-x-1"
@@ -43,7 +43,7 @@ const Header = () => {
           {/* Contact Info & CTA */}
 
           <div className="hidden md:flex items-center space-x-4">
-  <a href="tel:+919944997733">
+  <a href="tel:+919944827270">
     <Button className="bg-blue-600 hover:bg-blue-700">
       <Phone className="h-4 w-4" />
       <span className="ml-2">+91 99449 97733</span>
@@ -78,7 +78,7 @@ const Header = () => {
                 Home
               </a>
               <a
-                href="https://wa.me/919944997733"
+                href="https://wa.me/919944827270"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block px-3 py-2 text-gray-700 hover:text-green-600"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React,{ useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,8 @@ import {
 import { FaWhatsapp } from "react-icons/fa";
 import { Car } from "@/types/car";
 import CarGalleryModal from "./CarGalleryModal";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface CarCardProps {
   car: Car;
@@ -21,11 +23,14 @@ interface CarCardProps {
 
 const CarCard = ({ car }: CarCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  // const [fromDate, setFromDate] = useState(null);
+  const [fromDate, setFromDate] = useState<Date | null>(null);
+  const [toDate, setToDate] = useState<Date | null>(null);
+  // const [fromDate, setFromDate] = useState<Date[]>([])
+  // const [toDate, setToDate] = useState("");
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-  const today = new Date().toISOString().split("T")[0];
+  // const today = new Date().toISOString().split("T")[0];
 
   const handleWhatsAppBooking = () => {
     if (!fromDate || !toDate) {
@@ -33,13 +38,14 @@ const CarCard = ({ car }: CarCardProps) => {
       return;
     }
 
-    const message = `Hello, I would like to book the ${car.make} ${car.model} from ${fromDate} to ${toDate}.`;
+    const message = `Hello, I would like to book the ${car.make} ${car.model} from ${formatDate(fromDate)} to ${formatDate(toDate)}.`;
     const encodedMessage = encodeURIComponent(message);
-    const phoneNumber = "919944997733";
+    const phoneNumber = "919944827270";
     const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
     window.open(url, "_blank");
   };
+
 
   const generateSampleImages = (baseImage: string): string[] => {
   const basePath = baseImage.substring(0, baseImage.lastIndexOf("/")); // /images/CAR-1
@@ -47,6 +53,34 @@ const CarCard = ({ car }: CarCardProps) => {
     (i) => `${basePath}/${String(i).padStart(3, "0")}.jpg`
   );
 };
+
+// const [fromDate, setFromDate] = useState(null); // Use null for no initial date
+  const today:any = new Date();
+
+  // Format date as DD-MM-YYYY
+  const formatDate = (date: Date | null): string => {
+    if (!date) return "";
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  // Custom input to prevent keyboard
+  const CustomInput = React.forwardRef<HTMLInputElement, { value?: string; onClick?: () => void }>(
+    ({ value, onClick }, ref) => (
+      <input
+        type="text"
+        value={value}
+        onClick={onClick}
+        onChange={() => {}} // Prevent manual typing
+        placeholder="Select a date"
+        className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        ref={ref}
+        readOnly // Prevent keyboard
+      />
+    )
+  );
 
 
   return (
@@ -56,6 +90,7 @@ const CarCard = ({ car }: CarCardProps) => {
           src={car.image}
           alt={`${car.make} ${car.model}`}
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          onClick={() => setIsGalleryOpen(true)}
         />
         <div className="absolute top-4 left-4">
           <Badge variant="secondary" className="bg-blue-600 text-white">
@@ -85,7 +120,7 @@ const CarCard = ({ car }: CarCardProps) => {
         </div>
         <div className="absolute bottom-4 right-4">
           <div className="bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
-            ${car.price.toLocaleString()}
+            ₹ {car.price.toLocaleString()} / {car.km}
           </div>
         </div>
       </div>
@@ -140,7 +175,7 @@ const CarCard = ({ car }: CarCardProps) => {
         </div>
 
         {/* Date Range Picker */}
-        <div className="mb-4 flex flex-col md:flex-row gap-2">
+        {/* <div className="mb-4 flex flex-col md:flex-row gap-2">
           <input
             type="date"
             value={fromDate}
@@ -155,7 +190,73 @@ const CarCard = ({ car }: CarCardProps) => {
             min={fromDate || today}
             className="border px-2 py-1 rounded-md text-sm w-full md:w-1/2"
           />
-        </div>
+        </div> */}
+<div className="mb-4 w-full">
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    {/* From Date */}
+    {/* <div className="w-full">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        From Date
+      </label>
+      <input
+        type="date"
+        value={fromDate}
+        onChange={(e) => setFromDate(e.target.value)}
+        min={today}
+        className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+      />
+    </div> */}
+<div className="w-full">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        From Date
+      </label>
+
+      {/* <DatePicker
+        selected={fromDate}
+        onChange={(date: Date | null) => setFromDate(date)}
+        minDate={today}
+        placeholderText="Select a date"
+        className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        dateFormat="yyyy-MM-dd"
+      /> */}
+      <DatePicker
+          selected={fromDate}
+          onChange={(date: Date | null) => {
+            setFromDate(date);
+            // Reset To Date if it's before From Date
+            if (date && toDate && toDate < date) {
+              setToDate(null);
+            }
+          }}
+          minDate={today}
+          customInput={<CustomInput value={formatDate(fromDate)} />}
+          dateFormat="dd-MM-yyyy"
+          placeholderText="Select a date"
+        />
+    </div>
+    {/* To Date */}
+    <div className="w-full">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        To Date
+      </label>
+      <DatePicker
+          selected={toDate}
+          onChange={(date: Date | null) => setToDate(date)}
+          minDate={fromDate || today} // Ensure To Date is after From Date
+          customInput={<CustomInput value={formatDate(toDate)} />}
+          dateFormat="dd-MM-yyyy"
+          placeholderText="Select a date"
+        />
+      {/* <input
+        type="date"
+        value={toDate}
+        onChange={(e) => setToDate(e.target.value)}
+        min={fromDate || today}
+        className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+      /> */}
+    </div>
+  </div>
+</div>
 
         <div className="flex gap-2">
           <Button

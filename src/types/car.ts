@@ -13,6 +13,7 @@ export interface Car {
   image: string;
   images?: string[];
   features: string[];
+  km?:string;
   description: string;
 }
 
