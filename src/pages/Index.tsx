@@ -768,7 +768,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-[#edf2f7] via-[#dbe9f4] to-[#cbdced]">
       <Header />
       <Hero onSearch={handleSearch} />
       <Banner />
