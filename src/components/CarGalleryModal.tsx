@@ -60,7 +60,7 @@ const CarGalleryModal = ({ isOpen, onClose, car }: CarGalleryModalProps) => {
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900 mb-4"
                 >
-                  {car.make} {car.model} - Gallery
+                  {car.make} - Gallery
                 </Dialog.Title>
 
                 <div className="relative">

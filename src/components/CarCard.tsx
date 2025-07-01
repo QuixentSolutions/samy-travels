@@ -1,15 +1,11 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Heart,
-  Eye,
-  Phone,
   Calendar,
   Fuel,
   Gauge,
-  MessageCircle,
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { Car } from "@/types/car";
@@ -23,41 +19,61 @@ interface CarCardProps {
 
 const CarCard = ({ car }: CarCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
-  // const [fromDate, setFromDate] = useState(null);
   const [fromDate, setFromDate] = useState<Date | null>(null);
   const [toDate, setToDate] = useState<Date | null>(null);
-  // const [fromDate, setFromDate] = useState<Date[]>([])
-  // const [toDate, setToDate] = useState("");
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [timing, setTiming] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [fromDateError, setFromDateError] = useState("");
+  const [toDateError, setToDateError] = useState("");
 
-  // const today = new Date().toISOString().split("T")[0];
-
-  const handleWhatsAppBooking = () => {
-    if (!fromDate || !toDate) {
-      alert("Please select both from and to dates.");
+const handleWhatsAppBooking = () => {
+  if (!name) {
+      setNameError("Please fill your name");
       return;
     }
+    setNameError("");
 
-    const message = `Hello, I would like to book the ${car.make} ${car.model} from ${formatDate(fromDate)} to ${formatDate(toDate)}.`;
-    const encodedMessage = encodeURIComponent(message);
-    const phoneNumber = "919944827270";
-    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    if (!fromDate) {
+      setFromDateError("Please select a from date");
+      return;
+    }
+    setFromDateError("");
 
-    window.open(url, "_blank");
-  };
+    if (!toDate) {
+      setToDateError("Please select a to date");
+      return;
+    }
+    setToDateError("");
 
+  const message = `Hello, I am interested in booking the ${car.make}.
+  - Customer Name: ${name}
+  - Booking Period: From ${formatDate(fromDate)} to ${formatDate(toDate)}
+  ${timing ? `- Preferred Timing: ${timing}` : ""}`;
+  const encodedMessage = encodeURIComponent(message);
+  const phoneNumber = "919944827270";
+  const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
-  const generateSampleImages = (baseImage: string): string[] => {
-  const basePath = baseImage.substring(0, baseImage.lastIndexOf("/")); // /images/CAR-1
-  return [1, 2, 3, 4, 5].map(
-    (i) => `${basePath}/${String(i).padStart(3, "0")}.jpg`
-  );
+  window.open(url, "_blank");
+  setIsBookingOpen(false);
+  setName("");
+  setFromDate(null);
+  setToDate(null);
+  setTiming("");
 };
 
-// const [fromDate, setFromDate] = useState(null); // Use null for no initial date
-  const today:any = new Date();
+  const generateSampleImages = (baseImage: string): string[] => {
+    const basePath = baseImage.substring(0, baseImage.lastIndexOf("/"));
+    const imageCount = car.images?.length || 10;
+    return Array.from({ length: imageCount }, (_, i) => 
+      `${basePath}/${String(i + 1).padStart(3, "0")}.jpg`
+    );
+  };
 
-  // Format date as DD-MM-YYYY
+  const today: any = new Date();
+
   const formatDate = (date: Date | null): string => {
     if (!date) return "";
     const day = String(date.getDate()).padStart(2, "0");
@@ -66,69 +82,36 @@ const CarCard = ({ car }: CarCardProps) => {
     return `${day}-${month}-${year}`;
   };
 
-  // Custom input to prevent keyboard
   const CustomInput = React.forwardRef<HTMLInputElement, { value?: string; onClick?: () => void }>(
     ({ value, onClick }, ref) => (
       <input
         type="text"
         value={value}
         onClick={onClick}
-        onChange={() => {}} // Prevent manual typing
+        onChange={() => {}}
         placeholder="Select a date"
         className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         ref={ref}
-        readOnly // Prevent keyboard
+        readOnly
       />
     )
   );
-
 
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
       <div className="relative overflow-hidden">
         <img
           src={car.image}
-          alt={`${car.make} ${car.model}`}
+          alt={`${car.make}`}
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
           onClick={() => setIsGalleryOpen(true)}
         />
-        <div className="absolute top-4 left-4">
-          <Badge variant="secondary" className="bg-blue-600 text-white">
-            {car.year}
-          </Badge>
-        </div>
-        <div className="absolute top-4 right-4 flex gap-2">
-          <Button
-            size="icon"
-            variant="secondary"
-            className="h-8 w-8 bg-white/90 hover:bg-white"
-            onClick={() => setIsLiked(!isLiked)}
-          >
-            <Heart
-              className={`h-4 w-4 ${
-                isLiked ? "fill-red-500 text-red-500" : "text-gray-600"
-              }`}
-            />
-          </Button>
-          <Button
-            size="icon"
-            variant="secondary"
-            className="h-8 w-8 bg-white/90 hover:bg-white"
-          >
-            <Eye className="h-4 w-4 text-gray-600" />
-          </Button>
-        </div>
-        <div className="absolute bottom-4 right-4">
-          <div className="bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
-            ₹ {car.price.toLocaleString()} / {car.km}
-          </div>
-        </div>
       </div>
 
       <CardContent className="p-6">
         <div className="mb-4">
           <h3 className="text-xl font-bold text-gray-900 mb-1">
-            {car.make} {car.model}
+            {car.make} 
           </h3>
           <p className="text-gray-600 text-sm line-clamp-2">
             {car.description}
@@ -174,91 +157,7 @@ const CarCard = ({ car }: CarCardProps) => {
           </div>
         </div>
 
-        {/* Date Range Picker */}
-        {/* <div className="mb-4 flex flex-col md:flex-row gap-2">
-          <input
-            type="date"
-            value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
-            min={today}
-            className="border px-2 py-1 rounded-md text-sm w-full md:w-1/2"
-          />
-          <input
-            type="date"
-            value={toDate}
-            onChange={(e) => setToDate(e.target.value)}
-            min={fromDate || today}
-            className="border px-2 py-1 rounded-md text-sm w-full md:w-1/2"
-          />
-        </div> */}
-<div className="mb-4 w-full">
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    {/* From Date */}
-    {/* <div className="w-full">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        From Date
-      </label>
-      <input
-        type="date"
-        value={fromDate}
-        onChange={(e) => setFromDate(e.target.value)}
-        min={today}
-        className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
-      />
-    </div> */}
-<div className="w-full">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        From Date
-      </label>
-
-      {/* <DatePicker
-        selected={fromDate}
-        onChange={(date: Date | null) => setFromDate(date)}
-        minDate={today}
-        placeholderText="Select a date"
-        className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        dateFormat="yyyy-MM-dd"
-      /> */}
-      <DatePicker
-          selected={fromDate}
-          onChange={(date: Date | null) => {
-            setFromDate(date);
-            // Reset To Date if it's before From Date
-            if (date && toDate && toDate < date) {
-              setToDate(null);
-            }
-          }}
-          minDate={today}
-          customInput={<CustomInput value={formatDate(fromDate)} />}
-          dateFormat="dd-MM-yyyy"
-          placeholderText="Select a date"
-        />
-    </div>
-    {/* To Date */}
-    <div className="w-full">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        To Date
-      </label>
-      <DatePicker
-          selected={toDate}
-          onChange={(date: Date | null) => setToDate(date)}
-          minDate={fromDate || today} // Ensure To Date is after From Date
-          customInput={<CustomInput value={formatDate(toDate)} />}
-          dateFormat="dd-MM-yyyy"
-          placeholderText="Select a date"
-        />
-      {/* <input
-        type="date"
-        value={toDate}
-        onChange={(e) => setToDate(e.target.value)}
-        min={fromDate || today}
-        className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
-      /> */}
-    </div>
-  </div>
-</div>
-
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2">
           <Button
             className="flex-1 bg-blue-600 hover:bg-blue-700"
             onClick={() => setIsGalleryOpen(true)}
@@ -266,35 +165,110 @@ const CarCard = ({ car }: CarCardProps) => {
             Gallery
           </Button>
           <Button
-            variant="outline"
-            size="icon"
-            onClick={handleWhatsAppBooking}
-            title="Send booking on WhatsApp"
+            className="flex-1 bg-green-600 hover:bg-green-700"
+            onClick={() => setIsBookingOpen(true)}
           >
-            <FaWhatsapp className="h-4 w-4 text-green-600" />
+            Create Booking
           </Button>
         </div>
-      </CardContent>
 
-      {/* <CarGalleryModal
+        {isBookingOpen && (
+          <dialog open className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h2 className="text-lg font-bold mb-4">Book Your Car</h2>
+              <div className="space-y-4">
+              <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (nameError && e.target.value) setNameError("");
+                    }}
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    placeholder="Enter your name"
+                    required
+                  />
+                  {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">From Date</label>
+                   <DatePicker
+                      selected={fromDate}
+                      onChange={(date: Date | null) => {
+                        setFromDate(date);
+                        if (date && toDate && toDate < date) setToDate(null);
+                        if (fromDateError && date) setFromDateError("");
+                      }}
+                      minDate={today}
+                      customInput={<CustomInput value={formatDate(fromDate)} />}
+                      dateFormat="dd-MM-yyyy"
+                      placeholderText="Select a date"
+                    />
+                    {fromDateError && <p className="text-red-500 text-sm mt-1">{fromDateError}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">To Date</label>
+                    <DatePicker
+                      selected={toDate}
+                      onChange={(date: Date | null) => {
+                        setToDate(date);
+                        if (toDateError && date) setToDateError("");
+                      }}
+                      minDate={fromDate || today}
+                      customInput={<CustomInput value={formatDate(toDate)} />}
+                      dateFormat="dd-MM-yyyy"
+                      placeholderText="Select a date"
+                    />
+                    {toDateError && <p className="text-red-500 text-sm mt-1">{toDateError}</p>}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Timing (Optional)</label>
+                  <input
+                    type="text"
+                    value={timing}
+                    onChange={(e) => setTiming(e.target.value)}
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    placeholder="e.g., 10:00 AM - 2:00 PM"
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsBookingOpen(false);
+                      setName("");
+                      setFromDate(null);
+                      setToDate(null);
+                      setTiming("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="bg-green-600 hover:bg-green-700"
+                    onClick={handleWhatsAppBooking}
+                  >
+                    <FaWhatsapp className="h-4 w-4 mr-2" /> Send Booking
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </dialog>
+        )}
+      </CardContent>
+      <CarGalleryModal
         isOpen={isGalleryOpen}
         onClose={() => setIsGalleryOpen(false)}
         car={{
           make: car.make,
           model: car.model,
-          images: car.images || [car.image],
+          images: car.images || generateSampleImages(car.image),
         }}
-      /> */}
-      <CarGalleryModal
-  isOpen={isGalleryOpen}
-  onClose={() => setIsGalleryOpen(false)}
-  car={{
-    make: car.make,
-    model: car.model,
-    images: car.images || generateSampleImages(car.image),
-  }}
-/>
-
+      />
     </Card>
   );
 };
