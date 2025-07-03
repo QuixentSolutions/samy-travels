@@ -66,7 +66,7 @@ const handleWhatsAppBooking = () => {
 
   const generateSampleImages = (baseImage: string): string[] => {
     const basePath = baseImage.substring(0, baseImage.lastIndexOf("/"));
-    const imageCount = car.images?.length || 10;
+    const imageCount = car.images?.length || 7;
     return Array.from({ length: imageCount }, (_, i) => 
       `${basePath}/${String(i + 1).padStart(3, "0")}.jpg`
     );
