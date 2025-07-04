@@ -11,11 +11,11 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          {/* <div className="flex-shrink-0">
             <h1 className="text-2xl font-bold" style={{ color: "#2C3F6E" }}>
               <span style={{ color: "#8B132D" }}>Samy</span>Travels
             </h1>
-          </div>
+          </div> */}
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
@@ -25,7 +25,7 @@ const Header = () => {
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-green-600 flex items-center space-x-1"
             >
-              <FaWhatsapp className="h-5 w-5" />
+              <FaWhatsapp className="h-6 w-6 text-green-600" />
               <span>WhatsApp</span>
             </a>
 
@@ -35,7 +35,12 @@ const Header = () => {
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-red-600 flex items-center space-x-1"
             >
-              <MapPin className="h-5 w-5" />
+                <img
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Google_Maps_icon_%282020%29.svg/1428px-Google_Maps_icon_%282020%29.svg.png"
+    alt="Google Maps Pin"
+    className="w-5"
+  />
+              {/* <MapPin className="h-5 w-5" /> */}
               <span>Map</span>
             </a>
           </nav>
@@ -46,7 +51,7 @@ const Header = () => {
   <a href="tel:+919944827270">
     <Button className="bg-blue-600 hover:bg-blue-700">
       <Phone className="h-4 w-4" />
-      <span className="ml-2">+91 99449 97733</span>
+      <span className="ml-2">+91 99448 27270</span>
     </Button>
   </a>
 </div>
@@ -84,25 +89,29 @@ const Header = () => {
                 className="block px-3 py-2 text-gray-700 hover:text-green-600"
               >
                 <div className="flex items-center space-x-2">
-                  <FaWhatsapp className="h-4 w-4" />
+                  <FaWhatsapp className="h-4 w-4 text-green-600" />
                   <span>WhatsApp</span>
                 </div>
               </a>
               <a
-                href="https://www.google.com/maps/place/Your+Business+Location"
+                href="https://maps.app.goo.gl/jP7Ab41L7YuUhbMJA"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block px-3 py-2 text-gray-700 hover:text-red-600"
               >
-                <div className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4" />
-                  <span>Map</span>
-                </div>
+<div className="flex items-center space-x-2">
+  <img
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Google_Maps_icon_%282020%29.svg/1428px-Google_Maps_icon_%282020%29.svg.png"
+    alt="Google Maps Pin"
+    className="w-4"
+  />
+  <span>Map</span>
+</div>
               </a>
               <div className="px-3 py-2 space-y-2">
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <Phone className="h-4 w-4" />
-                  <span>+91 9944997733</span>
+                  <span>+91 99448 27270</span>
                 </div>
                 {/* <Button className="w-full bg-blue-600 hover:bg-blue-700">
                   Schedule Test Drive

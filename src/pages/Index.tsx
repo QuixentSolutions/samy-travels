@@ -181,7 +181,7 @@ const sampleCars: Car[] = [
   },
   {
     id: "9",
-    make: "அதிர்ச்சி",
+    make: "கனிவு",
     model: "Thunder",
     year: 2024,
     price: 15,
@@ -282,7 +282,7 @@ const sampleCars: Car[] = [
     image: "/images/CAR-4/001.jpg",
     features: [
       "Blind Spot Monitoring",
-      "Heated Steering Wheel",
+      // "Heated Steering Wheel",
       "Navigation System",
       "Ambient Lighting",
     ],
@@ -392,7 +392,7 @@ const sampleCars: Car[] = [
     features: [
       "Aerodynamic Design",
       "Touchscreen Interface",
-      "Lane Keep Assist",
+      // "Lane Keep Assist",
       "Premium Sound",
     ],
     description:

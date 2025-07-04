@@ -98,7 +98,7 @@ const handleWhatsAppBooking = () => {
   );
 
   return (
-    <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
+    <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden h-full grid grid-rows-[1fr_auto]">
       <div className="relative overflow-hidden">
         <img
           src={car.image}
@@ -159,20 +159,20 @@ const handleWhatsAppBooking = () => {
 
         <div className="flex flex-col gap-2">
           <Button
-            className="flex-1 bg-blue-600 hover:bg-blue-700"
+            className="w-full flex-1 bg-blue-600 hover:bg-blue-700"
             onClick={() => setIsGalleryOpen(true)}
           >
             Gallery
           </Button>
           <Button
-            className="flex-1 bg-green-600 hover:bg-green-700"
+            className="w-full flex-1 bg-green-600 hover:bg-green-700"
             onClick={() => setIsBookingOpen(true)}
           >
             Create Booking
           </Button>
         </div>
 
-        {isBookingOpen && (
+        {/* {isBookingOpen && (
           <dialog open className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
               <h2 className="text-lg font-bold mb-4">Book Your Car</h2>
@@ -258,7 +258,98 @@ const handleWhatsAppBooking = () => {
               </div>
             </div>
           </dialog>
-        )}
+        )} */}
+
+        {isBookingOpen && (
+  <>
+    <div className="fixed inset-0 bg-white bg-opacity-20 backdrop-blur-sm z-40"></div>
+    <dialog open className="fixed inset-0 bg-transparent flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-lg font-bold mb-4">Book Your Car</h2>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (nameError && e.target.value) setNameError("");
+              }}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              placeholder="Enter your name"
+              required
+            />
+            {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">From Date</label>
+              <DatePicker
+                selected={fromDate}
+                onChange={(date: Date | null) => {
+                  setFromDate(date);
+                  if (date && toDate && toDate < date) setToDate(null);
+                  if (fromDateError && date) setFromDateError("");
+                }}
+                minDate={today}
+                customInput={<CustomInput value={formatDate(fromDate)} />}
+                dateFormat="dd-MM-yyyy"
+                placeholderText="Select a date"
+              />
+              {fromDateError && <p className="text-red-500 text-sm mt-1">{fromDateError}</p>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">To Date</label>
+              <DatePicker
+                selected={toDate}
+                onChange={(date: Date | null) => {
+                  setToDate(date);
+                  if (toDateError && date) setToDateError("");
+                }}
+                minDate={fromDate || today}
+                customInput={<CustomInput value={formatDate(toDate)} />}
+                dateFormat="dd-MM-yyyy"
+                placeholderText="Select a date"
+              />
+              {toDateError && <p className="text-red-500 text-sm mt-1">{toDateError}</p>}
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Timing (Optional)</label>
+            <input
+              type="text"
+              value={timing}
+              onChange={(e) => setTiming(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              placeholder="e.g., 10:00 AM - 2:00 PM"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsBookingOpen(false);
+                setName("");
+                setFromDate(null);
+                setToDate(null);
+                setTiming("");
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-green-600 hover:bg-green-700"
+              onClick={handleWhatsAppBooking}
+            >
+              <FaWhatsapp className="h-4 w-4 mr-2" /> Send Booking
+            </Button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  </>
+)}
       </CardContent>
       <CarGalleryModal
         isOpen={isGalleryOpen}
